@@ -68,9 +68,10 @@ public class FormSubmissionTest {
             WebElement successMessage = driver.findElement(By.className("alert-body"));
             if (successMessage.isDisplayed()) {
                 successMessage.getText();
-                System.out.println("Form submission successful." + successMessage.getText());
+                System.out.println("Form submission failed." + successMessage.getText());
+                throw new Exception("Form submission failed.");
             } else {
-                System.out.println("Form submission failed.");
+                System.out.println("Form submission passed.");
             }
 
         } catch (Exception e) {
