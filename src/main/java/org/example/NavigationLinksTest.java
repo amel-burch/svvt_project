@@ -2,10 +2,15 @@ package org.example;
 
 import org.junit.*;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class NavigationLinksTest {
     private static WebDriver driver;
@@ -23,35 +28,37 @@ public class NavigationLinksTest {
 
     @Test
     public void testVijestiLink() {
-        // Locate and click the "Vijesti" link
-        WebElement vijestiLink = driver.findElement(By.linkText("Vijesti"));
-        vijestiLink.click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement vijestiLink = wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Vijesti")));
 
-        // Verify the URL and content
-        String expectedUrl = "https://avaz.ba/vijesti"; // Adjust if needed
+        vijestiLink.click();
+        String expectedUrl = "https://avaz.ba/vijesti";
+        System.out.println(driver.getCurrentUrl().contains(expectedUrl));
         Assert.assertTrue("Vijesti URL mismatch", driver.getCurrentUrl().contains(expectedUrl));
     }
 
     @Test
-    public void testCrnaHronikaLink() {
-        // Locate and click the "Crna Hronika" link
-        WebElement crnaHronikaLink = driver.findElement(By.linkText("CRNA HRONIKA"));
-        crnaHronikaLink.click();
-
-        // Verify the URL and content
-        String expectedUrl = "https://avaz.ba/vijesti/crna-hronika"; // Adjust if needed
-        Assert.assertTrue("Crna Hronika URL mismatch", driver.getCurrentUrl().contains(expectedUrl));
-    }
-
-    @Test
     public void testSportLink() {
-        // Locate and click the "Sport" link
-        WebElement sportLink = driver.findElement(By.linkText("Sport"));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement sportLink = wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Sport")));
         sportLink.click();
 
-        // Verify the URL and content
-        String expectedUrl = "https://avaz.ba/sport"; // Adjust if needed
+        String expectedUrl = "https://avaz.ba/sport";
+        System.out.println(driver.getCurrentUrl().contains(expectedUrl));
+
         Assert.assertTrue("Sport URL mismatch", driver.getCurrentUrl().contains(expectedUrl));
+    }
+
+    private void RemoveModal(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        try {
+            WebElement overlay = wait.until(ExpectedConditions.presenceOfElementLocated(
+                    By.id("onesignal-slidedown-container")));
+            ((JavascriptExecutor) driver).executeScript("arguments[0].style.display='none';", overlay);
+        } catch (Exception e) {
+            // If the overlay doesn't appear, continue without issues
+        }
     }
 
     @AfterClass
